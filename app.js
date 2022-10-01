@@ -1,6 +1,7 @@
 const express = require('express');
 
 const hbs = require('hbs');
+const { request } = require('http');
 const path = require('path');
 const PunkAPIWrapper = require('punkapi-javascript-wrapper');
 
@@ -23,13 +24,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/beers', (req, res) => {
+  const options = request.query.options;
   punkAPI
-    .getBeers()
+    .getBeers('?=${options}')             //wherefrom?
     .then(beersFromApi =>
       console.log('Beers from the database: ', beersFromApi)
+      res.render('beers');
+
     )
     .catch(error => console.log(error));
-  res.render('beers');
 });
 
 app.get('/random-beer', (req, res) => {
